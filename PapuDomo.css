@@ -1,0 +1,230 @@
+/* --- RESET --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: -1;
+}
+
+
+.navbar {
+    width: 100%;
+    padding: 15px 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    font-family: "Times New Roman", sans-serif;
+}
+.page-title{  text-align: center;
+    margin-top: 100px;
+    color: white;
+    animation: fadeIn 1.8s ease-in-out;}
+.intro{color: aliceblue;}
+.code-block{color: #fff;}
+.navbar ul {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    justify-content: center;
+}
+
+.navbar ul li a {
+    color: #fff;
+    font-size: 18px;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+
+.navbar ul li a:hover {
+    color: #00f2ff;
+    text-shadow: 0 0 10px #00f2ff;
+}
+
+/* Dropdown */
+.submenu ul {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.submenu:hover ul {
+    display: block;
+}
+
+.submenu ul li {
+    margin: 10px 0;
+}
+
+/* --- GLASSMORPHISM --- */
+.glass {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    font-family: "Times New Roman", sans-serif;
+}
+
+/* --- TITULO ANIMADO --- */
+.titulo-container {
+    text-align: center;
+    margin-top: 140px;
+    color: white;
+    animation: fadeIn 1.8s ease-in-out;
+}
+
+.titulo {
+    font-family: "Times New Roman", sans-serif;
+    font-size: 42px;
+    text-shadow: 0 0 20px #0a0d10;
+}
+
+.subtitulo {
+    font-family: "Times New Roman", sans-serif;
+    font-size: 18px;
+    opacity: 0.8;
+    margin-top: 10px;
+}
+
+/* --- CONTENIDO --- */
+.container {
+    width: 85%;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.card {
+    padding: 30px;
+    color: white;
+    border-radius: 20px;
+    animation: fadeInUp 1.5s ease;
+    font-family: "Times New Roman", sans-serif;
+}
+
+.card h2 {
+    font-family: "Times New Roman", sans-serif;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* --- GALERÍA --- */
+.galeria {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.galeria img {
+    width: 30%;
+    border-radius: 15px;
+    transition: transform 0.4s;
+}
+
+.galeria img:hover {
+    transform: scale(1.08);
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+    color: white;
+    font-family: "Roboto", sans-serif;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   MODAL TURNO FIFO - FIX
+========================= */
+#turnoModal{
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,0.60) !important;
+  backdrop-filter: blur(6px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+}
+
+#turnoModal.hidden{
+  display: none !important;
+}
+
+#turnoModal .turno-box{
+  width: min(92vw, 520px) !important;
+  padding: 35px 30px !important;
+  text-align: center !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background: rgba(15, 15, 25, 0.084) !important;
+  box-shadow: 0 0 35px rgba(0,0,0,0.7) !important;
+}
+
+#turnoModal h2{
+  font-family: 'Times New Roman', Times, serif, sans-serif !important;
+  letter-spacing: 1px !important;
+  font-size: 2.2rem !important;
+  margin-bottom: 12px !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(0, 179, 255, 0.7) !important;
+}
+
+#turnoModal p{
+  font-family: 'Times New Roman', Times, serif, sans-serif !important;
+  font-size: 1.2rem !important;
+  color: #ffdbdb !important;
+  margin-bottom: 22px !important;
+  line-height: 1.5 !important;
+}
+
+#turnoModal .turno-btn{
+  padding: 12px 26px !important;
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  border: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  background: rgba(255,255,255,0.92) !important;
+  color: #111 !important;
+  transition: .2s ease !important;
+}
+
+#turnoModal .turno-btn:hover{
+  transform: translateY(-2px) !important;
+  box-shadow: 0 0 16px rgba(0, 255, 255, 0.35) !important;
+}
+#password{
+    color: rgb(0, 136, 255);
+}

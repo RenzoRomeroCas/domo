@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control del Domo | PapuDomo</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="PapuDomo.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <!-- Video + overlay -->
+  <video class="video-background" autoplay muted loop playsinline>
+    <source src="ASTRO2.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar glass">
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+
+      <li class="submenu">
+        <a href="#">Acerca del Proyecto</a>
+        <ul class="dropdown">
+          <li><a href="codigo.html">Códigos</a></li>
+          <li><a href="procedimiento.html">Procedimiento</a></li>
+          <li><a href="materiales.html">Materiales</a></li>
+        </ul>
+      </li>
+
+      <li><a href="control.html">Control del domo</a></li>
+
+      <li style="margin-left:auto; color:#cccccc; font-size:0.95rem;">
+        Usuario: <span id="nombreUsuario" style="color:#ffffff; font-weight:600;">---</span>
+      </li>
+      <li style="margin-left:10px;">
+        <a href="javascript:logout()" style="color:#ffffff; font-weight:bold;">Cerrar sesión</a>
+      </li>
+    </ul>
+  </nav>
+
+  <header class="titulo-container">
+    <h1 class="titulo">CONTROL DEL DOMO Y CÁMARA</h1>
+    <p class="subtitulo">
+      Selecciona un planeta, apunta el domo y visualiza la ESP32-CAM en tiempo real.
+    </p>
+  </header>
+
+  <div class="container">
+    <!-- Panel de control -->
+    <section class="card glass">
+      <h2>Interfaz de control</h2>
+
+      <p><strong>Telescopio actual:</strong> <span id="nombreTelescopio">Cargando...</span></p>
+      <p><strong>Estado sesión / telescopio:</strong> <span id="estadoSesion">Cargando...</span></p>
+
+      <div style="margin-top:16px;">
+        <label for="planetaSelect"><strong>Planeta / objeto:</strong></label><br>
+        <select id="planetaSelect" style="margin-top:6px; padding:8px; border-radius:8px; min-width:220px; font-family: 'Times New Roman', Times, serif;color: rgb(255, 255, 255);background-color: rgb(17, 34, 158);font-size: 15px;">
+          <option value="Mercury">Mercurio</option>
+          <option value="Venus">Venus</option>
+          <option value="Moon" selected>Luna</option>
+          <option value="Mars">Marte</option>
+          <option value="Jupiter">Júpiter</option>
+          <option value="Saturn">Saturno</option>
+          <option value="Uranus">Urano</option>
+          <option value="Neptune">Neptuno</option>
+          <option value="Sun">Sol</option>
+        </select>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="btnApuntar" style="padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:bold ;font-family: 'Times New Roman', Times, serif;">
+          Apuntar domo al planeta seleccionado
+        </button>
+
+        <button id="btnFinalizar" style="padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:bold; background:#790000; color:rgb(255, 255, 255);font-family: 'Times New Roman', Times, serif;" disabled>
+          Finalizar observación
+        </button>
+      </div>
+
+      <p id="mensajeEstado" style="margin-top:12px; font-style:italic;"></p>
+    </section>
+
+    <!-- Vista de cámara -->
+    <section class="card glass">
+      <h2>Vista de la ESP32-CAM</h2>
+      <p>Imagen actualizada automáticamente mientras dure la observación.</p>
+
+      <div style="margin-top:12px; display:flex; justify-content:center;">
+        <img id="camStream" src="" alt="Stream ESP32-CAM"
+             style="max-width:100%; max-height:65vh; border-radius:18px; border:1px solid rgba(255,255,255,0.25);" />
+      </div>
+    </section>
+  </div>
+
+  <div style="margin-top:14px; text-align:center;">
+  <a id="btnDescargarFoto"
+     href="#"
+     download
+     style="display:inline-block; padding:10px 18px; border-radius:10px;
+            background:#2404d87e; color:rgb(255, 255, 255); font-weight:bold; text-decoration:none;
+            opacity:0.6; pointer-events:none;">
+    Descargar foto
+  </a>
+</div>
+
+
+  <footer class="glass">
+    © 2025 PapuDomo – Control del domo y cámara
+  </footer>
+
+  <!-- API + lógica de control -->
+  <script type="module" src="domo_control.js"></script>
+
+  <!-- logout compartido -->
+  <script type="module">
+    import {
+      supabase,
+      obtenerUsuario,
+      borrarDeColaUsuario,
+      finalizarSesionUsuario
+    } from "./api.js";
+
+    window.logout = async function () {
+      try {
+        const local = localStorage.getItem("papudomo_user");
+        const email = local ? JSON.parse(local).email : null;
+        if (!email) {
+          localStorage.removeItem("papudomo_user");
+          window.location.href = "registro.html";
+          return;
+        }
+
+        const { data: perfil } = await obtenerUsuario(email);
+        if (perfil) {
+          await borrarDeColaUsuario(perfil.id_usuario);
+          await finalizarSesionUsuario(perfil.id_usuario);
+        }
+
+        await supabase.auth.signOut();
+        localStorage.removeItem("papudomo_user");
+        window.location.href = "registro.html";
+      } catch (e) {
+        console.error(e);
+        localStorage.removeItem("papudomo_user");
+        window.location.href = "registro.html";
+      }
+    };
+  </script>
+</body>
+</html>
